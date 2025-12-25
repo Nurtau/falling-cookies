@@ -156,10 +156,16 @@ function updateCookies() {
 
         // Check if cookie hit the ground
         if (cookie.y >= groundLevel) {
-            // Remove cookie
-            if (cookie.element.parentNode) {
-                cookie.element.parentNode.removeChild(cookie.element);
-            }
+            // Add death/splat animation
+            cookie.element.classList.add('splat');
+
+            // Remove cookie after animation
+            setTimeout(() => {
+                if (cookie.element.parentNode) {
+                    cookie.element.parentNode.removeChild(cookie.element);
+                }
+            }, 300);
+
             gameState.cookies.splice(i, 1);
 
             // Lose a life
