@@ -15,18 +15,20 @@ A fun mobile web game where you tap falling cookies to score points! Inspired by
 ## 🌟 Features
 
 - **Mobile-First Design**: Optimized for touch devices
-- **Progressive Difficulty**: Speed increases every 15 seconds
+- **Challenging Difficulty**: Fast-paced action with aggressive difficulty progression
 - **Mario-Inspired Theme**: Colorful graphics and fun animations
+- **Realistic Animated Grass**: Multiple layers of swaying grass blades create an immersive environment
 - **Level System**: Watch your level increase as you improve
 - **Score Tracking**: See your final score when the game ends
 
 ## 🎯 Game Mechanics
 
-- **Starting Speed**: Cookies fall slowly at first
-- **Level Progression**: New level every 15 seconds
-- **Speed Increase**: Each level makes cookies fall faster
-- **Spawn Rate**: More cookies appear as levels increase
+- **Starting Speed**: Cookies fall at medium speed (challenging from the start!)
+- **Level Progression**: New level every 10 seconds (faster than before!)
+- **Speed Increase**: Each level increases falling speed by 0.8x (aggressive scaling)
+- **Spawn Rate**: More cookies appear rapidly as levels increase
 - **Maximum Lives**: 3 lives to start
+- **Ground Effect**: Realistic grass with animated blades that sway in the wind
 
 ## 🚀 Quick Start
 

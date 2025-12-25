@@ -5,8 +5,8 @@ const gameState = {
     level: 1,
     isPlaying: false,
     cookies: [],
-    cookieSpeed: 2,
-    spawnRate: 1500,
+    cookieSpeed: 3,
+    spawnRate: 1200,
     lastSpawn: 0,
     gameTime: 0,
     animationFrame: null,
@@ -50,8 +50,8 @@ function startGame() {
     gameState.level = 1;
     gameState.isPlaying = true;
     gameState.cookies = [];
-    gameState.cookieSpeed = 2;
-    gameState.spawnRate = 1500;
+    gameState.cookieSpeed = 3;
+    gameState.spawnRate = 1200;
     gameState.gameTime = 0;
 
     // Update UI
@@ -232,18 +232,18 @@ function loseLife() {
 function updateDifficulty() {
     const timeInSeconds = gameState.gameTime / 1000;
 
-    // Increase level every 15 seconds
-    const newLevel = Math.floor(timeInSeconds / 15) + 1;
+    // Increase level every 10 seconds (more frequent difficulty increase)
+    const newLevel = Math.floor(timeInSeconds / 10) + 1;
 
     if (newLevel > gameState.level) {
         gameState.level = newLevel;
         updateLevel();
 
-        // Increase speed
-        gameState.cookieSpeed = 2 + (gameState.level - 1) * 0.5;
+        // Increase speed more aggressively
+        gameState.cookieSpeed = 3 + (gameState.level - 1) * 0.8;
 
-        // Decrease spawn rate (spawn more frequently)
-        gameState.spawnRate = Math.max(500, 1500 - (gameState.level - 1) * 100);
+        // Decrease spawn rate more aggressively (spawn more frequently)
+        gameState.spawnRate = Math.max(300, 1200 - (gameState.level - 1) * 120);
 
         // Restart spawning with new rate
         startSpawning();

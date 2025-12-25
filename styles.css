@@ -145,11 +145,25 @@ body {
     width: 100%;
     height: 100%;
     position: relative;
-    background: linear-gradient(180deg, #5c94fc 0%, #64b0ff 70%, #8bc34a 70%, #689f38 100%);
+    background: linear-gradient(180deg, #5c94fc 0%, #64b0ff 70%, #6d4c41 70%, #5d4037 100%);
     overflow: hidden;
 }
 
-/* Ground decoration */
+/* Ground - Soil layer */
+#game-area::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30%;
+    background: linear-gradient(180deg, #6d4c41 0%, #5d4037 60%, #4e342e 100%);
+    border-top: 4px solid #4e342e;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Grass layer */
 #game-area::after {
     content: '';
     position: absolute;
@@ -157,18 +171,79 @@ body {
     left: 0;
     right: 0;
     height: 30%;
-    background:
-        repeating-linear-gradient(
-            90deg,
-            #8bc34a 0px,
-            #8bc34a 40px,
-            #7cb342 40px,
-            #7cb342 80px
-        );
-    border-top: 6px solid #558b2f;
-    z-index: 1;
+    background-image:
+        /* Front grass layer - tallest */
+        linear-gradient(105deg, transparent 48%, #7cb342 48%, #7cb342 50%, transparent 50%),
+        linear-gradient(95deg, transparent 48%, #8bc34a 48%, #8bc34a 50%, transparent 50%),
+        linear-gradient(110deg, transparent 48%, #689f38 48%, #689f38 50%, transparent 50%),
+        linear-gradient(100deg, transparent 48%, #7cb342 48%, #7cb342 50%, transparent 50%),
+        linear-gradient(92deg, transparent 48%, #8bc34a 48%, #8bc34a 50%, transparent 50%),
+        /* Middle grass layer */
+        linear-gradient(108deg, transparent 48%, #558b2f 48%, #558b2f 50%, transparent 50%),
+        linear-gradient(97deg, transparent 48%, #689f38 48%, #689f38 50%, transparent 50%),
+        linear-gradient(103deg, transparent 48%, #558b2f 48%, #558b2f 50%, transparent 50%),
+        /* Background grass layer - shortest */
+        linear-gradient(106deg, transparent 48%, #33691e 48%, #33691e 50%, transparent 50%),
+        linear-gradient(94deg, transparent 48%, #33691e 48%, #33691e 50%, transparent 50%);
+    background-size:
+        /* Front grass - tall and varied */
+        8px 120px, 10px 115px, 7px 125px, 9px 118px, 11px 122px,
+        /* Middle grass */
+        12px 80px, 10px 85px, 11px 78px,
+        /* Back grass */
+        15px 50px, 13px 55px;
+    background-position:
+        /* Front grass scattered positions */
+        5% 100%, 12% 100%, 23% 100%, 34% 100%, 45% 100%,
+        /* Middle grass */
+        18% 100%, 38% 100%, 55% 100%,
+        /* Back grass */
+        28% 100%, 48% 100%;
+    background-repeat: repeat-x;
+    z-index: 2;
+    pointer-events: none;
+    animation: grassSway 3s ease-in-out infinite;
+}
+
+/* Grass blades container */
+.grass-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30%;
+    z-index: 3;
     pointer-events: none;
 }
+
+/* Individual grass blades */
+.grass-blade {
+    position: absolute;
+    bottom: 0;
+    width: 6px;
+    height: 100px;
+    background: linear-gradient(to top, #558b2f 0%, #7cb342 50%, #8bc34a 100%);
+    border-radius: 50% 50% 0 0;
+    transform-origin: bottom center;
+    pointer-events: none;
+}
+
+/* Staggered animation for each blade */
+.grass-blade:nth-child(1) { animation: bladeSway1 2.3s ease-in-out infinite; height: 95px; }
+.grass-blade:nth-child(2) { animation: bladeSway2 2.7s ease-in-out infinite; height: 110px; }
+.grass-blade:nth-child(3) { animation: bladeSway3 2.1s ease-in-out infinite; height: 105px; }
+.grass-blade:nth-child(4) { animation: bladeSway1 2.5s ease-in-out infinite; height: 100px; }
+.grass-blade:nth-child(5) { animation: bladeSway2 2.9s ease-in-out infinite; height: 115px; }
+.grass-blade:nth-child(6) { animation: bladeSway3 2.4s ease-in-out infinite; height: 98px; }
+.grass-blade:nth-child(7) { animation: bladeSway1 2.6s ease-in-out infinite; height: 108px; }
+.grass-blade:nth-child(8) { animation: bladeSway2 2.2s ease-in-out infinite; height: 112px; }
+.grass-blade:nth-child(9) { animation: bladeSway3 2.8s ease-in-out infinite; height: 103px; }
+.grass-blade:nth-child(10) { animation: bladeSway1 2.4s ease-in-out infinite; height: 97px; }
+.grass-blade:nth-child(11) { animation: bladeSway2 2.7s ease-in-out infinite; height: 106px; }
+.grass-blade:nth-child(12) { animation: bladeSway3 2.5s ease-in-out infinite; height: 110px; }
+.grass-blade:nth-child(13) { animation: bladeSway1 2.3s ease-in-out infinite; height: 102px; }
+.grass-blade:nth-child(14) { animation: bladeSway2 2.6s ease-in-out infinite; height: 99px; }
+.grass-blade:nth-child(15) { animation: bladeSway3 2.8s ease-in-out infinite; height: 107px; }
 
 /* Cookie */
 .cookie {
@@ -187,6 +262,63 @@ body {
 @keyframes rotate {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+}
+
+/* Grass swaying animation */
+@keyframes grassSway {
+    0%, 100% {
+        transform: skewX(0deg);
+        filter: hue-rotate(0deg);
+    }
+    25% {
+        transform: skewX(-2deg);
+        filter: hue-rotate(-5deg);
+    }
+    50% {
+        transform: skewX(0deg);
+        filter: hue-rotate(0deg);
+    }
+    75% {
+        transform: skewX(2deg);
+        filter: hue-rotate(5deg);
+    }
+}
+
+/* Individual blade sway animations */
+@keyframes bladeSway1 {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-8deg);
+    }
+    75% {
+        transform: rotate(8deg);
+    }
+}
+
+@keyframes bladeSway2 {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    30% {
+        transform: rotate(10deg);
+    }
+    70% {
+        transform: rotate(-10deg);
+    }
+}
+
+@keyframes bladeSway3 {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    20% {
+        transform: rotate(-6deg);
+    }
+    60% {
+        transform: rotate(6deg);
+    }
 }
 
 .cookie:active {
