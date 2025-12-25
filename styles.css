@@ -1,0 +1,301 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Arial Black', 'Arial Bold', sans-serif;
+    background: linear-gradient(180deg, #5c94fc 0%, #64b0ff 100%);
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#game-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 0.3s ease;
+}
+
+.screen.hidden {
+    display: none;
+}
+
+/* Start Screen */
+#start-screen {
+    background: linear-gradient(180deg, #5c94fc 0%, #64b0ff 50%, #90d0ff 100%);
+    padding: 20px;
+}
+
+#start-screen h1 {
+    font-size: 48px;
+    color: #fff;
+    text-shadow:
+        4px 4px 0px #000,
+        -2px -2px 0px #000,
+        2px -2px 0px #000,
+        -2px 2px 0px #000,
+        0px 4px 0px #d32f2f;
+    margin-bottom: 30px;
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+#start-screen p {
+    font-size: 20px;
+    color: #fff;
+    text-shadow: 2px 2px 0px #000;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.instructions {
+    font-size: 16px !important;
+    margin-bottom: 30px !important;
+}
+
+/* Mario-style Button */
+.mario-button {
+    background: linear-gradient(180deg, #ffd54f 0%, #ffc107 50%, #ff6f00 100%);
+    border: 4px solid #000;
+    border-radius: 12px;
+    color: #000;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 15px 40px;
+    cursor: pointer;
+    box-shadow:
+        0 6px 0 #d84315,
+        0 8px 8px rgba(0,0,0,0.3);
+    transition: all 0.1s;
+    touch-action: manipulation;
+}
+
+.mario-button:active {
+    transform: translateY(4px);
+    box-shadow:
+        0 2px 0 #d84315,
+        0 4px 4px rgba(0,0,0,0.3);
+}
+
+/* HUD */
+#hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 10px;
+    z-index: 100;
+    border-bottom: 4px solid #000;
+}
+
+.hud-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.label {
+    font-size: 12px;
+    color: #ffd54f;
+    text-shadow: 1px 1px 0px #000;
+    margin-bottom: 5px;
+}
+
+.value {
+    font-size: 24px;
+    color: #fff;
+    text-shadow: 2px 2px 0px #000;
+}
+
+.heart {
+    font-size: 20px;
+    margin: 0 2px;
+}
+
+/* Game Area */
+#game-area {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: linear-gradient(180deg, #5c94fc 0%, #64b0ff 70%, #8bc34a 70%, #689f38 100%);
+    overflow: hidden;
+}
+
+/* Ground decoration */
+#game-area::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30%;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #8bc34a 0px,
+            #8bc34a 40px,
+            #7cb342 40px,
+            #7cb342 80px
+        );
+    border-top: 6px solid #558b2f;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Cookie */
+.cookie {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    font-size: 50px;
+    cursor: pointer;
+    animation: rotate 2s linear infinite;
+    z-index: 10;
+    transition: transform 0.1s;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.cookie:active {
+    transform: scale(1.2);
+}
+
+/* Cookie destroyed animation */
+@keyframes explode {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+.cookie.exploding {
+    animation: explode 0.3s ease-out;
+}
+
+/* Score popup */
+.score-popup {
+    position: absolute;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffd54f;
+    text-shadow: 2px 2px 0px #000;
+    pointer-events: none;
+    z-index: 50;
+    animation: scoreFloat 1s ease-out forwards;
+}
+
+@keyframes scoreFloat {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+}
+
+/* Game Over Screen */
+#gameover-screen {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+#gameover-screen h1 {
+    font-size: 48px;
+    color: #f44336;
+    text-shadow:
+        3px 3px 0px #000,
+        -2px -2px 0px #b71c1c,
+        6px 6px 12px rgba(0,0,0,0.5);
+    margin-bottom: 30px;
+}
+
+.final-stats {
+    margin: 30px 0;
+}
+
+.final-stats p {
+    font-size: 24px;
+    color: #fff;
+    text-shadow: 2px 2px 0px #000;
+    margin: 15px 0;
+}
+
+.highlight {
+    color: #ffd54f;
+    font-size: 32px;
+}
+
+/* Responsive adjustments */
+@media (max-height: 600px) {
+    #start-screen h1 {
+        font-size: 36px;
+    }
+    .mario-button {
+        font-size: 20px;
+        padding: 12px 30px;
+    }
+}
+
+/* Clouds decoration */
+.cloud {
+    position: absolute;
+    background: white;
+    border-radius: 100px;
+    opacity: 0.8;
+    animation: float 20s infinite linear;
+}
+
+.cloud::before,
+.cloud::after {
+    content: '';
+    position: absolute;
+    background: white;
+    border-radius: 100px;
+}
+
+@keyframes float {
+    from { left: -200px; }
+    to { left: 100%; }
+}

@@ -1,0 +1,316 @@
+// Game State
+const gameState = {
+    score: 0,
+    lives: 3,
+    level: 1,
+    isPlaying: false,
+    cookies: [],
+    cookieSpeed: 2,
+    spawnRate: 1500,
+    lastSpawn: 0,
+    gameTime: 0,
+    animationFrame: null,
+    spawnInterval: null
+};
+
+// DOM Elements
+const startScreen = document.getElementById('start-screen');
+const gameScreen = document.getElementById('game-screen');
+const gameoverScreen = document.getElementById('gameover-screen');
+const startButton = document.getElementById('start-button');
+const restartButton = document.getElementById('restart-button');
+const gameArea = document.getElementById('game-area');
+const scoreDisplay = document.getElementById('score');
+const livesDisplay = document.getElementById('lives');
+const levelDisplay = document.getElementById('level');
+const finalScoreDisplay = document.getElementById('final-score');
+const finalLevelDisplay = document.getElementById('final-level');
+
+// Cookie emojis for variety
+const cookieEmojis = ['🍪', '🍪', '🍪', '🍩', '🧁', '🎂'];
+
+// Initialize game
+function init() {
+    startButton.addEventListener('click', startGame);
+    restartButton.addEventListener('click', restartGame);
+
+    // Prevent scrolling on mobile
+    document.body.addEventListener('touchmove', (e) => {
+        if (gameState.isPlaying) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+}
+
+// Start game
+function startGame() {
+    // Reset game state
+    gameState.score = 0;
+    gameState.lives = 3;
+    gameState.level = 1;
+    gameState.isPlaying = true;
+    gameState.cookies = [];
+    gameState.cookieSpeed = 2;
+    gameState.spawnRate = 1500;
+    gameState.gameTime = 0;
+
+    // Update UI
+    updateScore();
+    updateLives();
+    updateLevel();
+
+    // Switch screens
+    startScreen.classList.add('hidden');
+    gameoverScreen.classList.add('hidden');
+    gameScreen.classList.remove('hidden');
+
+    // Clear game area
+    gameArea.innerHTML = '';
+
+    // Start game loops
+    gameState.lastSpawn = Date.now();
+    gameLoop();
+    startSpawning();
+}
+
+// Restart game
+function restartGame() {
+    startGame();
+}
+
+// Main game loop
+function gameLoop() {
+    if (!gameState.isPlaying) return;
+
+    const currentTime = Date.now();
+    gameState.gameTime += 16; // Approximate 60fps
+
+    // Update difficulty every 10 seconds
+    updateDifficulty();
+
+    // Update all cookies
+    updateCookies();
+
+    gameState.animationFrame = requestAnimationFrame(gameLoop);
+}
+
+// Start spawning cookies
+function startSpawning() {
+    if (gameState.spawnInterval) {
+        clearInterval(gameState.spawnInterval);
+    }
+
+    gameState.spawnInterval = setInterval(() => {
+        if (gameState.isPlaying) {
+            spawnCookie();
+        }
+    }, gameState.spawnRate);
+}
+
+// Spawn a new cookie
+function spawnCookie() {
+    const cookie = document.createElement('div');
+    cookie.className = 'cookie';
+    cookie.innerHTML = cookieEmojis[Math.floor(Math.random() * cookieEmojis.length)];
+
+    // Random horizontal position
+    const maxX = gameArea.offsetWidth - 60;
+    const x = Math.random() * maxX;
+
+    cookie.style.left = x + 'px';
+    cookie.style.top = '-60px';
+
+    // Cookie data
+    const cookieData = {
+        element: cookie,
+        x: x,
+        y: -60,
+        speed: gameState.cookieSpeed
+    };
+
+    gameState.cookies.push(cookieData);
+    gameArea.appendChild(cookie);
+
+    // Add touch/click event
+    cookie.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        destroyCookie(cookieData);
+    });
+
+    cookie.addEventListener('click', (e) => {
+        e.preventDefault();
+        destroyCookie(cookieData);
+    });
+}
+
+// Update all cookies
+function updateCookies() {
+    const groundLevel = gameArea.offsetHeight * 0.7; // Ground starts at 70% height
+
+    for (let i = gameState.cookies.length - 1; i >= 0; i--) {
+        const cookie = gameState.cookies[i];
+
+        // Move cookie down
+        cookie.y += cookie.speed;
+        cookie.element.style.top = cookie.y + 'px';
+
+        // Check if cookie hit the ground
+        if (cookie.y >= groundLevel) {
+            // Remove cookie
+            if (cookie.element.parentNode) {
+                cookie.element.parentNode.removeChild(cookie.element);
+            }
+            gameState.cookies.splice(i, 1);
+
+            // Lose a life
+            loseLife();
+        }
+    }
+}
+
+// Destroy cookie (player tapped it)
+function destroyCookie(cookieData) {
+    // Find cookie in array
+    const index = gameState.cookies.indexOf(cookieData);
+    if (index === -1) return; // Already destroyed
+
+    // Add score
+    gameState.score += 10;
+    updateScore();
+
+    // Show score popup
+    showScorePopup(cookieData.x, cookieData.y);
+
+    // Animate cookie destruction
+    cookieData.element.classList.add('exploding');
+
+    // Remove cookie after animation
+    setTimeout(() => {
+        if (cookieData.element.parentNode) {
+            cookieData.element.parentNode.removeChild(cookieData.element);
+        }
+    }, 300);
+
+    // Remove from array
+    gameState.cookies.splice(index, 1);
+}
+
+// Show score popup
+function showScorePopup(x, y) {
+    const popup = document.createElement('div');
+    popup.className = 'score-popup';
+    popup.textContent = '+10';
+    popup.style.left = x + 'px';
+    popup.style.top = y + 'px';
+
+    gameArea.appendChild(popup);
+
+    setTimeout(() => {
+        if (popup.parentNode) {
+            popup.parentNode.removeChild(popup);
+        }
+    }, 1000);
+}
+
+// Lose a life
+function loseLife() {
+    gameState.lives--;
+    updateLives();
+
+    // Shake screen effect
+    gameScreen.style.animation = 'shake 0.3s';
+    setTimeout(() => {
+        gameScreen.style.animation = '';
+    }, 300);
+
+    if (gameState.lives <= 0) {
+        gameOver();
+    }
+}
+
+// Update difficulty based on time
+function updateDifficulty() {
+    const timeInSeconds = gameState.gameTime / 1000;
+
+    // Increase level every 15 seconds
+    const newLevel = Math.floor(timeInSeconds / 15) + 1;
+
+    if (newLevel > gameState.level) {
+        gameState.level = newLevel;
+        updateLevel();
+
+        // Increase speed
+        gameState.cookieSpeed = 2 + (gameState.level - 1) * 0.5;
+
+        // Decrease spawn rate (spawn more frequently)
+        gameState.spawnRate = Math.max(500, 1500 - (gameState.level - 1) * 100);
+
+        // Restart spawning with new rate
+        startSpawning();
+    }
+}
+
+// Update score display
+function updateScore() {
+    scoreDisplay.textContent = gameState.score;
+}
+
+// Update lives display
+function updateLives() {
+    let heartsHTML = '';
+    for (let i = 0; i < gameState.lives; i++) {
+        heartsHTML += '<span class="heart">❤️</span>';
+    }
+    livesDisplay.innerHTML = heartsHTML;
+}
+
+// Update level display
+function updateLevel() {
+    levelDisplay.textContent = gameState.level;
+}
+
+// Game Over
+function gameOver() {
+    gameState.isPlaying = false;
+
+    // Stop spawning
+    if (gameState.spawnInterval) {
+        clearInterval(gameState.spawnInterval);
+    }
+
+    // Stop animation loop
+    if (gameState.animationFrame) {
+        cancelAnimationFrame(gameState.animationFrame);
+    }
+
+    // Clear remaining cookies
+    gameState.cookies.forEach(cookie => {
+        if (cookie.element.parentNode) {
+            cookie.element.parentNode.removeChild(cookie.element);
+        }
+    });
+    gameState.cookies = [];
+
+    // Show game over screen
+    finalScoreDisplay.textContent = gameState.score;
+    finalLevelDisplay.textContent = gameState.level;
+
+    setTimeout(() => {
+        gameScreen.classList.add('hidden');
+        gameoverScreen.classList.remove('hidden');
+    }, 500);
+}
+
+// Add shake animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+        20%, 40%, 60%, 80% { transform: translateX(10px); }
+    }
+`;
+document.head.appendChild(style);
+
+// Start the game
+init();
