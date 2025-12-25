@@ -168,7 +168,7 @@ function spawnCookie() {
 
 // Update all cookies
 function updateCookies() {
-    const trashCanLevel = gameArea.offsetHeight - 155; // Trash can top is 155px from bottom (150px height + 5px from bottom)
+    const trashCanLevel = gameArea.offsetHeight - 100; // Trash can top is 100px from bottom
 
     for (let i = gameState.cookies.length - 1; i >= 0; i--) {
         const cookie = gameState.cookies[i];
