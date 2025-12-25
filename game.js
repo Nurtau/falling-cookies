@@ -166,6 +166,30 @@ function spawnCookie() {
     });
 }
 
+// Spawn green smoke from trash can
+function spawnSmoke(x) {
+    const numParticles = 3 + Math.floor(Math.random() * 3); // 3-5 particles
+
+    for (let i = 0; i < numParticles; i++) {
+        const smoke = document.createElement('div');
+        smoke.className = 'smoke-particle';
+
+        // Position at the cookie's x position with some randomness
+        const offsetX = (Math.random() - 0.5) * 40; // Random spread
+        smoke.style.left = (x + offsetX) + 'px';
+        smoke.style.bottom = '30px'; // Start from top of trash can
+
+        gameArea.appendChild(smoke);
+
+        // Remove smoke after animation
+        setTimeout(() => {
+            if (smoke.parentNode) {
+                smoke.parentNode.removeChild(smoke);
+            }
+        }, 1500);
+    }
+}
+
 // Update all cookies
 function updateCookies() {
     const trashCanLevel = gameArea.offsetHeight - 30; // Trash can top is 30px from bottom
@@ -181,6 +205,9 @@ function updateCookies() {
         if (cookie.y >= trashCanLevel) {
             // Add death/splat animation
             cookie.element.classList.add('splat');
+
+            // Spawn green smoke from trash can
+            spawnSmoke(cookie.x + 30); // Center of cookie (60px wide, so +30)
 
             // Remove cookie after animation
             setTimeout(() => {
