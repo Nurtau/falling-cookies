@@ -10,7 +10,8 @@ const gameState = {
     lastSpawn: 0,
     gameTime: 0,
     animationFrame: null,
-    spawnInterval: null
+    spawnInterval: null,
+    playerName: ''
 };
 
 // DOM Elements
@@ -25,6 +26,7 @@ const livesDisplay = document.getElementById('lives');
 const levelDisplay = document.getElementById('level');
 const finalScoreDisplay = document.getElementById('final-score');
 const finalLevelDisplay = document.getElementById('final-level');
+const playerNameInput = document.getElementById('player-name');
 
 // Cookie emojis for variety
 const cookieEmojis = ['🍪', '🍪', '🍪', '🍩', '🧁', '🎂'];
@@ -44,6 +46,22 @@ function init() {
 
 // Start game
 function startGame() {
+    // Get and validate player name
+    const name = playerNameInput.value.trim();
+
+    if (!name) {
+        // Shake the input if empty
+        playerNameInput.style.animation = 'shake 0.3s';
+        setTimeout(() => {
+            playerNameInput.style.animation = '';
+        }, 300);
+        playerNameInput.focus();
+        return;
+    }
+
+    // Store player name
+    gameState.playerName = name;
+
     // Reset game state
     gameState.score = 0;
     gameState.lives = 3;
@@ -64,8 +82,13 @@ function startGame() {
     gameoverScreen.classList.add('hidden');
     gameScreen.classList.remove('hidden');
 
-    // Clear game area
-    gameArea.innerHTML = '';
+    // Clear game area and re-add trash can
+    gameArea.innerHTML = `
+        <div class="trash-can">
+            <div class="trash-lid"></div>
+            <div class="trash-body"></div>
+        </div>
+    `;
 
     // Start game loops
     gameState.lastSpawn = Date.now();
@@ -319,7 +342,9 @@ function gameOver() {
     });
     gameState.cookies = [];
 
-    // Show game over screen
+    // Show game over screen with player name
+    const playerNameDisplay = document.getElementById('player-name-display');
+    playerNameDisplay.textContent = gameState.playerName;
     finalScoreDisplay.textContent = gameState.score;
     finalLevelDisplay.textContent = gameState.level;
 
