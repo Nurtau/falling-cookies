@@ -223,6 +223,9 @@ function loseLife() {
     gameState.lives--;
     updateLives();
 
+    // Show breaking heart animation
+    showBreakingHeart();
+
     // Shake screen effect
     gameScreen.style.animation = 'shake 0.3s';
     setTimeout(() => {
@@ -232,6 +235,25 @@ function loseLife() {
     if (gameState.lives <= 0) {
         gameOver();
     }
+}
+
+// Show breaking heart animation
+function showBreakingHeart() {
+    const heart = document.createElement('div');
+    heart.className = 'breaking-heart';
+    heart.innerHTML = '💔';
+
+    // Position in center of screen
+    heart.style.left = '50%';
+    heart.style.top = '50%';
+
+    gameArea.appendChild(heart);
+
+    setTimeout(() => {
+        if (heart.parentNode) {
+            heart.parentNode.removeChild(heart);
+        }
+    }, 1000);
 }
 
 // Update difficulty based on time

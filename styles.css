@@ -311,6 +311,17 @@ body {
     animation: scoreFloat 1s ease-out forwards;
 }
 
+/* Breaking heart animation */
+.breaking-heart {
+    position: absolute;
+    font-size: 80px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 150;
+    animation: heartBreak 1s ease-out forwards;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+}
+
 @keyframes scoreFloat {
     0% {
         transform: translateY(0);
@@ -319,6 +330,35 @@ body {
     100% {
         transform: translateY(-50px);
         opacity: 0;
+    }
+}
+
+@keyframes heartBreak {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+    }
+    10% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+    30% {
+        transform: translate(-50%, -50%) scale(1.1) rotate(-5deg);
+    }
+    40% {
+        transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.1) rotate(-5deg);
+    }
+    60% {
+        transform: translate(-50%, -50%) scale(1.1) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+        filter: drop-shadow(0 0px 0px rgba(0,0,0,0));
     }
 }
 
