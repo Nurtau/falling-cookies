@@ -145,7 +145,7 @@ function spawnCookie() {
 
 // Update all cookies
 function updateCookies() {
-    const groundLevel = gameArea.offsetHeight * 0.7; // Ground starts at 70% height
+    const trashCanLevel = gameArea.offsetHeight - 270; // Trash can top is 270px from bottom
 
     for (let i = gameState.cookies.length - 1; i >= 0; i--) {
         const cookie = gameState.cookies[i];
@@ -154,8 +154,8 @@ function updateCookies() {
         cookie.y += cookie.speed;
         cookie.element.style.top = cookie.y + 'px';
 
-        // Check if cookie hit the ground
-        if (cookie.y >= groundLevel) {
+        // Check if cookie fell into trash can
+        if (cookie.y >= trashCanLevel) {
             // Add death/splat animation
             cookie.element.classList.add('splat');
 
