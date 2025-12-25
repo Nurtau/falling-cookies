@@ -203,11 +203,12 @@ body {
 /* Trash Can Container */
 .trash-can {
     position: absolute;
-    bottom: 10px;
+    bottom: 5px;
     left: 50%;
     transform: translateX(-50%);
-    width: 350px;
-    height: 240px;
+    width: 90%;
+    max-width: 500px;
+    height: 150px;
     z-index: 5;
     pointer-events: none;
 }
@@ -218,58 +219,58 @@ body {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 310px;
-    height: 35px;
+    width: 95%;
+    height: 25px;
     background: linear-gradient(180deg, #757575 0%, #616161 100%);
-    border-radius: 20px 20px 0 0;
-    border: 5px solid #424242;
-    box-shadow: 0 5px 0 #212121;
+    border-radius: 15px 15px 0 0;
+    border: 4px solid #424242;
+    box-shadow: 0 4px 0 #212121;
 }
 
 /* Trash Can Lid Handle */
 .trash-lid::before {
     content: '';
     position: absolute;
-    top: 6px;
+    top: 4px;
     left: 50%;
     transform: translateX(-50%);
-    width: 90px;
-    height: 16px;
+    width: 80px;
+    height: 12px;
     background: #616161;
-    border-radius: 10px;
-    border: 3px solid #424242;
+    border-radius: 8px;
+    border: 2px solid #424242;
 }
 
 /* Trash Can Body */
 .trash-body {
     position: absolute;
-    top: 30px;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    width: 290px;
-    height: 190px;
+    width: 90%;
+    height: 120px;
     background: linear-gradient(180deg, #9e9e9e 0%, #757575 100%);
-    border: 5px solid #424242;
-    border-radius: 0 0 20px 20px;
+    border: 4px solid #424242;
+    border-radius: 0 0 15px 15px;
     box-shadow:
-        inset 0 -25px 40px rgba(0,0,0,0.3),
-        0 10px 0 #212121;
+        inset 0 -20px 30px rgba(0,0,0,0.3),
+        0 8px 0 #212121;
 }
 
 /* Trash Can Lines (decoration) */
 .trash-body::before {
     content: '';
     position: absolute;
-    top: 25px;
-    left: 20px;
-    right: 20px;
-    height: 4px;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    height: 3px;
     background: #616161;
-    border-radius: 3px;
+    border-radius: 2px;
     box-shadow:
-        0 35px 0 #616161,
-        0 70px 0 #616161,
-        0 105px 0 #616161;
+        0 25px 0 #616161,
+        0 50px 0 #616161,
+        0 75px 0 #616161;
 }
 
 /* Cookie */
